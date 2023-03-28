@@ -11,10 +11,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.4" PrivateAssets="all" />
     <PackageReference Include="MudBlazor" Version="6.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataswornPoco\DataswornPoco.csproj" />
+    <Reference Include="DataswornPoco">
+      <HintPath>bin\DataswornPoco.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

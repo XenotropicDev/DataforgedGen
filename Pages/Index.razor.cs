@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using Microsoft.JSInterop;
-using OracleGen;
-using OracleGen.Shared;
+using DataforgedGen;
+using DataforgedGen.Shared;
 using MudBlazor;
 using TheOracle2.Data;
 using Newtonsoft.Json;
@@ -22,7 +22,7 @@ using DataswornPoco;
 using System.Reflection.Metadata;
 using System.ComponentModel;
 
-namespace OracleGen.Pages;
+namespace DataforgedGen.Pages;
 
 public partial class Index
 {
