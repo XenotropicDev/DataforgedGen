@@ -2,7 +2,8 @@ name: Deploy to GitHub Pages
 # Run workflow on every push to the master branch
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -29,6 +30,6 @@ jobs:
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4.4.1
       with:
-        token: ${{ secrets.GHPAGES_SECRET }}
         branch: gh-pages
         folder: release/wwwroot      
+        # token: ${{ secrets.GHPAGES_SECRET }}
