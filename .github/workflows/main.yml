@@ -27,7 +27,9 @@ jobs:
       run: dotnet publish DataforgedGen.csproj -c Release -o release --nologo
       
     - name: List folder contents
-      run: ls
+      run: |
+        ls -R ./release
+        ls -R ./wwwroot
       
     # changes the base-tag in index.html from '/' to 'DataforgedGen' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to DataforgedGen
