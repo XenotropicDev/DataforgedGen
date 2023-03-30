@@ -19,7 +19,7 @@ jobs:
     
     # publishes Blazor project to the release-folder
     - name: Publish .NET Core Project
-      run: dotnet publish BlazorGitHubPagesDemo.csproj -c Release -o release --nologo
+      run: dotnet publish DataforgedGen.csproj -c Release -o release --nologo
       
     # Commit wwwroot folder to gh-pages branch
     - name: Deploy to GitHub Pages
