@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="DataswornPoco">
-      <HintPath>bin\DataswornPoco.dll</HintPath>
+    <Reference Include="../CommonReferences/DataswornPoco">
+      <HintPath>CommonReferences\DataswornPoco.dll</HintPath>
     </Reference>
   </ItemGroup>
 
