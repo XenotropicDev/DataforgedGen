@@ -22,27 +22,18 @@ jobs:
       with:
         dotnet-version: 7.0.x
     
+    # Install dotnet wasm buildtools workload
+    - name: Install .NET WASM Build Tools
+      run: dotnet workload install wasm-tools
+    
     # publishes Blazor project to the release-folder
     - name: Publish .NET Core Project
-      run: dotnet publish DataforgedGen.csproj -c Release -o release --nologo
-      
-    #- name: List folder contents
-    #  run: |
-    #    ls -R ./release
-    #    ls -R ./wwwroot
-    #  
-    ## changes the base-tag in index.html from '/' to 'DataforgedGen' to match GitHub Pages repository subdirectory
-    #- name: Change base-tag in index.html from / to DataforgedGen
-    #  run: sed -i 's/<base href="\/" \/>/<base href="\/DataforgedGen\/" \/>/g' release/wwwroot/index.html
-      
-    # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
-    - name: Add .nojekyll file
-      run: touch release/wwwroot/.nojekyll
+      run: dotnet publish DataforgedGen.csproj -c:Release -p:GHPages=true -o dist/Web --nologo
       
     # Commit wwwroot folder to gh-pages branch
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4.4.1
       with:
         branch: gh-pages
-        folder: release/wwwroot      
+        folder: dist/Web/wwwroot      
         # token: ${{ secrets.GHPAGES_SECRET }}

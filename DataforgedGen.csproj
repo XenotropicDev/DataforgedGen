@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
-	<StaticWebAssetBasePath>DataforgedGen</StaticWebAssetBasePath>
   </PropertyGroup>
 
   <ItemGroup>
