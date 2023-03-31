@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "DataforgedGen.dll": "sha256-ewE6VBbpr2N0Rpim4H7Ha9HQjEbgbyxxGETTUZximGw=",
+      "DataforgedGen.dll": "sha256-\/\/U7uwtTnya3SjUMk2ZLdfNQda690VlVgY\/QmB7C6S4=",
       "DataswornPoco.dll": "sha256-SkqNqvfIGc2bGRuOkgoYXToulSm4a\/CbOw6YoI8BWV8=",
       "Microsoft.AspNetCore.Components.dll": "sha256-pvUDRygklgsUO30eBSr0F68NZf20rGpZ5AVHgnMeN38=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-SJ4bhzKS+xsplXfsK5muYlmj5VGpJ5CRHzQiCzYrTSg=",
