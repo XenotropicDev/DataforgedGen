@@ -1,0 +1,36 @@
+﻿@page "/Move"
+@using TheOracle2.Data;
+@using Newtonsoft.Json;
+@using System.Linq;
+@using DataforgedGen;
+
+<MudGrid Class="pa-4">
+    <MudItem xs="12" md="10" lg="8">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h3" GutterBottom="true">MoveGen</MudText>
+            <MudStack Row="true">
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Download" @onclick="DownloadJson">Download Json File</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.RestartAlt" OnClick="LoadMove">Reset Template</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Clear" OnClick="ClearData">Clear</MudButton>
+            </MudStack>
+
+            <MudGrid Class="pa-4">
+                <MudItem xs="12">
+                    <MudPaper Class="pa-4">
+                        <MudStack Row="true">
+                            <MudTextField T="string" Label="Move Name" @bind-Value="@move.Name" Required="true" RequiredError="Name is required!" />
+                            <MudTextField T="string" Label="Move Category" @bind-Value="@move.Category" />
+                        </MudStack>
+                        <MudTextField T="string" Label="Move Description" @bind-Value="@move.Text" Lines="@move.Text.GetMultilineCount()" Variant="Variant.Text" />
+                        <MudTextField T="string" Label="Strong Hit Outcome" @bind-Value="@move.Outcomes.StrongHit.Text" Lines="@move.Outcomes.StrongHit.Text.GetMultilineCount()" Variant="Variant.Text" />
+                        <MudTextField T="string" Label="Weak Hit Outcome" @bind-Value="@move.Outcomes.WeakHit.Text" Lines="@move.Outcomes.WeakHit.Text.GetMultilineCount()" Variant="Variant.Text" />
+                        <MudTextField T="string" Label="Miss Outcome" @bind-Value="@move.Outcomes.Miss.Text" Lines="@move.Outcomes.Miss.Text.GetMultilineCount()" Variant="Variant.Text" />
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+
