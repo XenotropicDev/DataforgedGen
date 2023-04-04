@@ -4,14 +4,114 @@
 @using System.Linq;
 
 <MudGrid Class="pa-4">
-    <MudItem xs="6">
+    <MudItem xs="12" md="10" lg="8">
         <MudPaper Class="pa-4">
             <MudText Typo="Typo.h3" GutterBottom="true">AssetGen</MudText>
-            <MudDivider />
+            <MudText Class="pa-4">If you want something a little more customizable check out effortlessmountain's <MudLink Href="https://effortlessmountain.github.io/ironsworn-asset-workbench/">Asset workbench</MudLink></MudText>
+            <MudStack Row="true">
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Download" @onclick="DownloadJson">Download Json File</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.RestartAlt" OnClick="LoadAsset">Reset Template</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Clear" OnClick="ClearData">Clear</MudButton>
+            </MudStack>
 
-            <MudText Class="pa-4">This is not added yet, check back soon. In the mean time please visit effortlessmountain's <MudLink Href="https://effortlessmountain.github.io/ironsworn-asset-workbench/">Asset workbench</MudLink></MudText>
+            <MudGrid Class="pa-4">
+                <MudItem xs="12">
+                    <MudPaper Class="pa-4">
+                        <MudStack Row="true">
+                            <MudTextField T="string" Label="Asset Name" @bind-Value="@asset.Name" Required="true" RequiredError="Name is required!" />
+                            <MudTextField T="string" Label="Asset Type" @bind-Value="@asset.AssetType" />
+                        </MudStack>
+                        <MudTable Class="mt-4" Items="@asset.Abilities" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" ReadOnly="false" Striped="true" Dense="true">
+                            <HeaderContent>
+                                <MudTh>Enabled</MudTh>
+                                <MudTh>Name</MudTh>
+                                <MudTh>Text</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Enabled">
+                                    <MudCheckBox @bind-Checked="@context.Enabled" ReadOnly="false" />
+                                </MudTd>
+                                <MudTd DataLabel="Name">@context.Name</MudTd>
+                                <MudTd DataLabel="Text">@context.Text</MudTd>
+                                <MudTd>
+                                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="() => RemoveFromTable(context)"></MudIconButton>
+                                </MudTd>
+                            </RowTemplate>
+                            <RowEditingTemplate>
+                                <MudTd DataLabel="Enabled">
+                                    <MudCheckBox @bind-Checked="@context.Enabled" ReadOnly="false" />
+                                </MudTd>
+                                <MudTd DataLabel="Name">
+                                    <MudTextField @bind-Value="@context.Name" Required="true" />
+                                </MudTd>
+                                <MudTd DataLabel="Text">
+                                    <MudTextField @bind-Value="@context.Text" Required="true" />
+                                </MudTd>
+                            </RowEditingTemplate>
+                            <FooterContent>
+                                <MudTd DataLabel="Enabled">
+                                    <MudCheckBox @bind-Checked="@abilityToAdd.Enabled" ReadOnly="false" HelperText="Enabled" />
+                                </MudTd>
+                                <MudTd DataLabel="Name">
+                                    <MudTextField @bind-Value="@abilityToAdd.Name" Required="true" Min="1" HelperText="Name" />
+                                </MudTd>
+                                <MudTd DataLabel="Text">
+                                    <MudTextField @bind-Value="@abilityToAdd.Text" Required="true" Min="1" HelperText="Text" />
+                                </MudTd>
+                                <MudTd DataLabel="Add">
+                                    <MudIconButton Size="@Size.Small" OnClick="AddAbility" Icon="@Icons.Material.Filled.Add"></MudIconButton>
+                                </MudTd>
+                            </FooterContent>
+                        </MudTable>
+                        <MudButton Class="mt-4" Variant="Variant.Filled" OnClick="toggleCondition">@(asset.ConditionMeter == null ? "Add Condition Meter" : "Remove Condition Meter")</MudButton>
+                        @if (asset.ConditionMeter != null)
+                        {
+                            <MudCard Class="pa-2">
+                                <MudTextField T="string" Label="Condition Name" @bind-Value="@asset.ConditionMeter.Name"></MudTextField>
+                                <MudStack Row="true">
+                                    <MudTextField T="int" Label="Condition Min" @bind-Value="@asset.ConditionMeter.Min"></MudTextField>
+                                    <MudTextField T="int" Label="Condition Max" @bind-Value="@asset.ConditionMeter.Max"></MudTextField>
+                                    <MudTextField T="int" Label="Condition Starting Value" @bind-Value="@asset.ConditionMeter.Value"></MudTextField>
+                                </MudStack>
+                            </MudCard>
+                        }
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
         </MudPaper>
     </MudItem>
+    <MudItem xs="4">
+        <MudCard>
+            <MudCardHeader Style="@($"background:{Colors.Grey.Darken2}; color:{Colors.Shades.White};")">
+                <MudText>@asset.AssetType.Substring(asset.AssetType.LastIndexOf('/') + 1)</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="@Typo.h6">@asset.Name</MudText>
+                @foreach(var input in asset.Inputs ?? new())
+                {
+                    <MudText>@input.Name:</MudText>
+                    <MudDivider DividerType="DividerType.FullWidth" />
+                }
+                <MudText Class="mt-2 mb-2">@asset.Requirement</MudText>
+                @foreach(var ability in asset.Abilities)
+                {
+                    <MudStack Row="true">
+                        <MudToggleIconButton ToggledIcon="@Icons.Material.Filled.Circle" Icon="@Icons.Material.Outlined.Circle" Size="@Size.Small" ToggledSize="@Size.Small" Toggled="@ability.Enabled"></MudToggleIconButton>
+                        <MudText><b>@($"{ability.Name}: ")</b>@((MarkupString)Markdig.Markdown.ToHtml(ability.Text).Replace("<p>", "").Replace("</p>", ""))</MudText>
+                    </MudStack>
+                }
+                @if (asset.ConditionMeter != null)
+                {
+                    <MudGrid Class="gap-1 mt-3" Justify="Justify.Center">
+                    @for (int i = 0; i <= asset.ConditionMeter.Max; i++)
+                    {
+                        var local = i;
+                                <MudItem xs="1" Class="border-solid border-2 pa-0 ma-0"><MudText Typo="@Typo.h6">@local.ToString("+#;-#;+0")</MudText></MudItem>
+                    }
+                    </MudGrid>
+                }
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
 </MudGrid>
-
 

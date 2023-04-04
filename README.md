@@ -12,6 +12,5 @@ If you have a lot of things you want to convert you might want to check out the 
 * Import JSON for editing
 * Author features
 * Move Reference page
-* Asset page
 * Oracle Bot/Discord integrations
 * Pretty outputs for printing and digital displays
