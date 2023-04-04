@@ -4,14 +4,39 @@
 @using System.Linq;
 
 <MudGrid Class="pa-4">
-    <MudItem xs="6">
+    <MudItem xs="12" md="10" lg="8">
         <MudPaper Class="pa-4">
             <MudText Typo="Typo.h3" GutterBottom="true">AssetGen</MudText>
-            <MudDivider />
-
             <MudText Class="pa-4">This is not added yet, check back soon. In the mean time please visit effortlessmountain's <MudLink Href="https://effortlessmountain.github.io/ironsworn-asset-workbench/">Asset workbench</MudLink></MudText>
+            <MudStack Row="true">
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Download" @onclick="DownloadJson">Download Json File</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.RestartAlt" OnClick="LoadAsset">Reset Template</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Clear" OnClick="ClearData">Clear</MudButton>
+            </MudStack>
+
+            <MudGrid Class="pa-4">
+                <MudItem xs="12">
+                    <MudPaper Class="pa-4">
+                        <MudStack Row="true">
+                            <MudTextField T="string" Label="Asset Name" @bind-Value="@asset.Name" Required="true" RequiredError="Name is required!" />
+                            <MudTextField T="string" Label="Asset Type" @bind-Value="@asset.AssetType" />
+                        </MudStack>
+                        <MudSwitch Label="Enable Condition Meter" @bind-Checked="enableCondition"></MudSwitch> 
+                        @if (enableCondition)
+                        {
+                            <MudTextField T="string" Label="Condition Name" @bind-Value="@asset.ConditionMeter.Name"></MudTextField>
+                            <MudTextField T="int" Label="Condition Min" @bind-Value="@asset.ConditionMeter.Max"></MudTextField>
+                            <MudTextField T="int" Label="Condition Max" @bind-Value="@asset.ConditionMeter.Min"></MudTextField>
+                            <MudTextField T="int" Label="Condition Starting Value" @bind-Value="@asset.ConditionMeter.Value"></MudTextField>
+                        }
+                        <MudTextField T="string" Label="Asset Requirement" @bind-Value="@asset.Requirement" Variant="Variant.Text" />
+                        <MudTextField T="string" Label="Strong Hit Outcome" @bind-Value="@asset.ConditionMeter.StrongHit.Text" Lines="@asset.Outcomes.StrongHit.Text.GetMultilineCount()" Variant="Variant.Text" />
+                        <MudTextField T="string" Label="Weak Hit Outcome" @bind-Value="@asset.Outcomes.WeakHit.Text" Lines="@asset.Outcomes.WeakHit.Text.GetMultilineCount()" Variant="Variant.Text" />
+                        <MudTextField T="string" Label="Miss Outcome" @bind-Value="@asset.Outcomes.Miss.Text" Lines="@asset.Outcomes.Miss.Text.GetMultilineCount()" Variant="Variant.Text" />
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
         </MudPaper>
     </MudItem>
 </MudGrid>
-
 
