@@ -1,29 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using System.Net.Http;
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.Web.Virtualization;
-using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using Microsoft.JSInterop;
-using DataforgedGen;
-using DataforgedGen.Shared;
-using MudBlazor;
-using TheOracle2.Data;
 using Newtonsoft.Json;
-using System.Linq;
 using System.Text;
+using TheOracle2.Data;
 
 namespace DataforgedGen.Pages
 {
     public partial class AssetPage
     {
         private Asset asset = new();
-        bool enableCondition = false;
+        private bool enableCondition = false;
 
         [Inject]
         public IJSRuntime? JS { get; set; }
@@ -31,11 +17,12 @@ namespace DataforgedGen.Pages
         public AssetPage()
         {
             LoadAsset();
+            enableCondition = asset.ConditionMeter.Max > 0;
         }
 
         private void LoadAsset()
         {
-            string text = """{ "Category": "Ironsworn/Moves/Adventure", "Name": "Face Danger", "Text": "When **you attempt something risky or react to an imminent threat**, envision your action and roll. If you act...\n\n * With speed, agility, or precision: Roll +edge.\n * With charm, loyalty, or courage: Roll +heart.\n * With aggressive action, forceful defense, strength, or endurance: Roll +iron.\n * With deception, stealth, or trickery: Roll +shadow.\n * With expertise, insight, or observation: Roll +wits.\n\nOn a **strong hit**, you are successful. Take +1 momentum.\n\nOn a **weak hit**, you succeed, but face a troublesome cost. Choose one.\n\n * You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.\n * You are tired or hurt: [Endure Harm](Ironsworn/Moves/Suffer/Endure_Harm) (1 harm).\n * You are dispirited or afraid: [Endure Stress](Ironsworn/Moves/Suffer/Endure_Stress) (1 stress).\n * You sacrifice resources: Suffer -1 supply.\n\nOn a **miss**, you fail, or your progress is undermined by a dramatic and costly turn of events. [Pay the Price](Ironsworn/Moves/Fate/Pay_the_Price).", "Outcomes": { "Strong Hit": { "Text": "You are successful. Take +1 momentum." }, "Weak Hit": { "Text": "You succeed, but face a troublesome cost. Choose one.\n\n * You are delayed, lose advantage, or face a new danger: Suffer -1 momentum.\n * You are tired or hurt: [Endure Harm](Ironsworn/Moves/Suffer/Endure_Harm) (1 harm).\n * You are dispirited or afraid: [Endure Stress](Ironsworn/Moves/Suffer/Endure_Stress) (1 stress).\n * You sacrifice resources: Suffer -1 supply." }, "Miss": { "Text": "You fail, or your progress is undermined by a dramatic and costly turn of events. [Pay the Price](Ironsworn/Moves/Fate/Pay_the_Price)." } }}""";
+            string text = """{ "Asset Type": "Ironsworn/Assets/Companion", "Name": "Cave Lion", "Display": { "Title": "Cave Lion" }, "Inputs": [ { "Input Type": "Text", "Name": "Name", "Adjustable": false } ], "Requirement": "Your cat takes down its prey.", "Condition Meter": { "Min": 0, "Value": 4, "Name": "Health", "Max": 4, "Conditions": [], "Aliases": [ "Companion Health" ] }, "Abilities": [ { "$id": "Ironsworn/Assets/Companion/Cave_Lion/Abilities/1", "Name": "Eager", "Text": "When your cat chases down big game, you may [Resupply](Ironsworn/Moves/Adventure/Resupply) with +edge (instead of +wits). If you do, take +1 supply or +1 momentum on a strong hit.", "Enabled": false }, { "$id": "Ironsworn/Assets/Companion/Cave_Lion/Abilities/2", "Name": "Inescapable", "Text": "When you [Enter the Fray](Ironsworn/Moves/Combat/Enter_the_Fray) or [Strike](Ironsworn/Moves/Combat/Strike) by sending your cat to attack, roll +edge. On a hit, take +2 momentum.", "Enabled": false }, { "$id": "Ironsworn/Assets/Companion/Cave_Lion/Abilities/3", "Name": "Protective", "Text": "When you [Make Camp](Ironsworn/Moves/Adventure/Make_Camp), your cat is alert to trouble. If you or an ally choose to relax, take +1 spirit. If you focus, take +1 momentum.", "Enabled": false } ]}""";
             asset = JsonConvert.DeserializeObject<Asset>(text) ?? new();
         }
 
@@ -63,15 +50,54 @@ namespace DataforgedGen.Pages
                 Display = new(),
                 Attachments = new(),
                 ConditionMeter = new(),
-                Inputs= new(),
-                States= new(),
-                Usage=new(),
+                Inputs = new(),
+                States = new(),
+                Usage = new(),
             };
         }
 
-        void FormatAsset()
+        private void FormatAsset()
         {
             asset.Id = $"{asset.AssetType.Replace(" ", "_")}/{asset.Name.Replace(" ", "_")}";
+            foreach(var ability in asset.Abilities)
+            {
+                ability.Id = asset.Id + $"/{ability.Name.Replace(" ", "_")}";
+            }
+            if (asset.ConditionMeter != null)
+            {
+                asset.ConditionMeter.Id = asset.Id + $"/{asset.ConditionMeter.Name.Replace(" ", "_")}";
+            }
+            foreach (var input in asset.Inputs ?? new())
+            {
+                input.Id = asset.Id + $"/{input.Name.Replace(" ", "_")}";
+                input.InputType = AssetInput.Text;
+            }
+        }
+
+        private void RemoveFromTable(Ability value)
+        {
+            var removed = asset.Abilities.Remove(value);
+            asset.Abilities = new(asset.Abilities);
+        }
+
+        private Ability abilityToAdd = new();
+
+        private void AddAbility()
+        {
+            asset.Abilities.Add(abilityToAdd);
+            abilityToAdd = new();
+        }
+
+        private void toggleCondition()
+        {
+            if (asset.ConditionMeter == null)
+            {
+                asset.ConditionMeter = new() { Max = 5, Value = 5, Name = "Health" };
+            }
+            else
+            {
+                asset.ConditionMeter = null;
+            }
         }
     }
 }
