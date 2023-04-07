@@ -81,7 +81,7 @@
         </MudPaper>
     </MudItem>
     <MudItem xs="4">
-        <MudCard>
+        <MudCard Style="@($"width:{cardWidth}px; height:{cardHeight}px;")" id="assetCard">
             <MudCardHeader Style="@($"background:{Colors.Grey.Darken2}; color:{Colors.Shades.White};")">
                 <MudText>@asset.AssetType.Substring(asset.AssetType.LastIndexOf('/') + 1)</MudText>
             </MudCardHeader>
@@ -112,6 +112,10 @@
                 }
             </MudCardContent>
         </MudCard>
+        <MudStack Row="true" Class="mt-6">
+            <MudNumericField @bind-Value="cardWidth" Min="200" Max="400" Label="Card Width" Step="5"></MudNumericField>
+            <MudNumericField @bind-Value="cardHeight" Min="400" Max="800" Label="Card Height" Step="5"></MudNumericField>
+        </MudStack>
+        <MudButton Variant="@Variant.Filled" OnClick="printCardButton">Print/Save PDF</MudButton>
     </MudItem>
 </MudGrid>
-
