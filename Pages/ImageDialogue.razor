@@ -1,0 +1,21 @@
+﻿<MudDialog DefaultFocus="DefaultFocus.LastChild">
+    <DialogContent>
+        <img src="@ImageUrl" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Submit">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    
+    [Parameter] public string ImageUrl { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    
+    //[Inject] public IJSRuntime? JS { get; set; }
+    //async Task Save() => await JS!.InvokeVoidAsync("downloadScreenShot", asset.Name, "#assetCard");
+}
+

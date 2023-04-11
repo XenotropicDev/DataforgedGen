@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
+using MudBlazor;
 using Newtonsoft.Json;
 using System.Text;
 using TheOracle2.Data;
@@ -43,7 +45,19 @@ namespace DataforgedGen.Pages
 
         private async Task printCardButton()
         {
-            await JS!.InvokeVoidAsync("PrintElem", "assetCard");
+            await JS!.InvokeVoidAsync("downloadScreenShot", asset.Name, "#assetCard");
+        }
+
+        private async Task showImageInDialog()
+        {
+            var url = await JS!.InvokeAsync<string>("getScreenData", "#assetCard");
+
+            var dialogParameters = new DialogParameters
+            {
+                { "ImageUrl", url }
+            };
+
+            DialogService.Show<ImageDialogue>(asset.Name, dialogParameters);
         }
 
         private void ClearData()

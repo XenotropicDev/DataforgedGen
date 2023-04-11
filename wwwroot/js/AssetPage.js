@@ -1,27 +1,48 @@
-function PrintElem(elem) {
-    //var x = window.screenX, y = window.screenY;
-    //var height = document.body.getBoundingClientRect().height;
-    //var width = document.body.getBoundingClientRect().width;
-    //var mywindow = window.open('', 'my div', 'top=' + y + ', left=' + x + ',height=' + height + ',width=' + width);
-    ////var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+function put2Canvas(canvasDestination, canvasSource) {
+    html2canvas(document.querySelector(canvasSource)).then(canvas => {
 
-    //mywindow.document.write('<html><head><title>' + document.title + '</title>');
-    //mywindow.document.write('</head><body >');
-    //mywindow.document.write('<h1>' + document.title + '</h1>');
-    //mywindow.document.write(document.getElementById(elem).innerHTML);
-    //mywindow.document.write('</body></html>');
-
-    //mywindow.document.close(); // necessary for IE >= 10
-    //mywindow.focus(); // necessary for IE >= 10*/
-
-    //mywindow.print();
-    //mywindow.close();
+        var canvasID = document.getElementById(canvasDestination);
+        //get the destination context
+        var ctx = canvasID.getContext('2d');
+        ctx.scale(0.5, 0.5);
+        ctx.width = window.innerWidth / 3;
+        ctx.height = window.innerHeight / 3;
+        ctx.drawImage(canvas, 0, 0);
+    });
 }
 
-function printContent(el) {
-    var restorepage = $('body').html();
-    var printcontent = $('#' + el).clone();
-    $('body').empty().html(printcontent);
-    window.print();
-    $('body').html(restorepage);
+
+function getScreenData(canvasSource) {
+    return new Promise((resolve, reject) => {
+        html2canvas(document.querySelector(canvasSource)).then(canvas => {
+            resolve(canvas.toDataURL())
+        });
+    });
+}
+
+
+function downloadScreenShot(filename, canvasSource) {
+    html2canvas(document.querySelector(canvasSource)).then(canvas => {
+        saveAs(canvas.toDataURL(), filename + '.png')
+    });
+}
+
+
+function saveAs(uri, filename) {
+    var link = document.createElement('a');
+    if (typeof link.download === 'string') {
+        link.href = uri;
+        link.download = filename;
+
+        //Firefox requires the link to be in the body
+        document.body.appendChild(link);
+
+        //simulate click
+        link.click();
+
+        //remove the link when done
+        document.body.removeChild(link);
+    } else {
+        window.open(uri);
+    }
 }
