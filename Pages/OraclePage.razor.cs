@@ -19,6 +19,9 @@ public partial class OraclePage
     private MudNumericField<int?> CeilingAddInput = new();
     private MudTable<Table> OracleResultTable = new();
 
+    private int columnCount = 3;
+    private int cardWidth = 500;
+
     [Inject]
     public IJSRuntime? JS { get; set; }
 
@@ -101,5 +104,17 @@ public partial class OraclePage
     {
         var removed = oracle.Table.Remove(value);
         oracle.Table = new(oracle.Table);
+    }
+
+    private async Task showImageInDialog()
+    {
+        var url = await JS!.InvokeAsync<string>("getScreenData", "#oracleCard");
+
+        var dialogParameters = new DialogParameters
+            {
+                { "ImageUrl", url }
+            };
+
+        DialogService.Show<ImageDialogue>(oracle.Name, dialogParameters);
     }
 }
