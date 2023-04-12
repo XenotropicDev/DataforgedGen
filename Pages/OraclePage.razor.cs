@@ -19,12 +19,18 @@ public partial class OraclePage
     private MudNumericField<int?> CeilingAddInput = new();
     private MudTable<Table> OracleResultTable = new();
 
+    private List<List<Table>> tableSplit = new();
+
+    private int columnCount = 3;
+    private int cardWidth = 500;
+
     [Inject]
     public IJSRuntime? JS { get; set; }
 
     public OraclePage()
     {
         LoadOracle1();
+        tableSplit = oracle.Table.SplitIntoColumns(columnCount);
     }
 
     private void LoadOracle1()
@@ -42,6 +48,11 @@ public partial class OraclePage
             var value = result.Floor == result.Ceiling ? result.Floor.ToString() : $"{result.Floor}-{result.Ceiling}";
             result.Id = $"{oracle.Category}/{oracle.Name}/{value}";
         }
+    }
+
+    public void columnChange()
+    {
+        tableSplit = oracle.Table.SplitIntoColumns(columnCount);
     }
 
     private async Task DownloadJson()
@@ -62,10 +73,10 @@ public partial class OraclePage
     private void ClearData()
     {
         oracle = new();
-        tableRowToAdd = new() { Ceiling = 1, Floor = 1 };
-        //oracle.Table.Add(new() { Ceiling = 1, Floor = 1, Result = "Some roll result" });
         oracle.Usage = new();
         oracle.Usage.Suggestions = new();
+
+        tableRowToAdd = new() { Ceiling = 1, Floor = 1 };
     }
 
     private void AddTableRow()
@@ -73,6 +84,8 @@ public partial class OraclePage
         oracle.Table.Add(tableRowToAdd.CloneJson() ?? new());
         var newMax = oracle.Table.Max(t => t.Ceiling) + 1;
         tableRowToAdd = new() { Ceiling = newMax, Floor = newMax };
+        
+        tableSplit = oracle.Table.SplitIntoColumns(columnCount);
     }
 
     private void AddSuggestionRow()
@@ -101,5 +114,19 @@ public partial class OraclePage
     {
         var removed = oracle.Table.Remove(value);
         oracle.Table = new(oracle.Table);
+        
+        tableSplit = oracle.Table.SplitIntoColumns(columnCount);
+    }
+
+    private async Task showImageInDialog()
+    {
+        var url = await JS!.InvokeAsync<string>("getScreenData", "#oracleCard");
+
+        var dialogParameters = new DialogParameters
+            {
+                { "ImageUrl", url }
+            };
+
+        DialogService.Show<ImageDialogue>(oracle.Name, dialogParameters);
     }
 }

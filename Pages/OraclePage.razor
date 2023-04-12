@@ -4,8 +4,10 @@
 @using Newtonsoft.Json;
 @using System.Linq;
 
+@inject IDialogService DialogService
+
 <MudGrid Class="pa-4">
-    <MudItem xs="12" md="10" lg="8">
+    <MudItem md="12" lg="7">
         <MudPaper Class="pa-4">
             <MudText Typo="Typo.h3" GutterBottom="true">OracleGen</MudText>
             <MudStack Row="true">
@@ -95,6 +97,35 @@
                 </MudItem>
             </MudGrid>
         </MudPaper>
+    </MudItem>
+    <MudItem md="12" lg="5">
+        <MudCard Style="@($"width:{cardWidth}px; box-shadow: unset !important;")" id="oracleCard">
+            <MudCardContent>
+                <MudText Typo="@Typo.h4">@oracle.Name</MudText>
+                <div class="black py-1 mt-1 mb-1 rounded-sm"></div>
+                <MudSimpleTable Striped=true Dense=true Elevation="0">
+                    <tbody>
+                        @for (int row = 0; row < tableSplit.Max(t => t.Count); row++)
+                        {
+                            <tr>
+                            @for (int i = 0; i < columnCount; i++)
+                            {
+                                if (tableSplit[i].Count > row)
+                                {
+                                    <td>@tableSplit[i][row]?.GetDisplayText()</td>
+                                }
+                            }
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </MudCardContent>
+        </MudCard>
+        <MudStack Class="mt-4" Style="@($"width: {cardWidth}px;")">
+            <MudNumericField @bind-Value="cardWidth" Min="200" Max="600" Label="Card Width" Step="5"></MudNumericField>
+            <MudNumericField @bind-Value="columnCount" @bind-Value:after="columnChange" Min="1" Max="4" Label="Number Of Columns" Step="1"></MudNumericField>
+        </MudStack>
+        <MudButton Class="mt-2" Variant="@Variant.Filled" OnClick="showImageInDialog">View/Save Image</MudButton>
     </MudItem>
 </MudGrid>
 

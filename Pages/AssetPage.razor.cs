@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
+using MudBlazor;
 using Newtonsoft.Json;
 using System.Text;
 using TheOracle2.Data;
@@ -9,7 +11,8 @@ namespace DataforgedGen.Pages
     public partial class AssetPage
     {
         private Asset asset = new();
-        private bool enableCondition = false;
+        private int cardWidth = 380;
+        private int cardHeight = 500;
 
         [Inject]
         public IJSRuntime? JS { get; set; }
@@ -17,7 +20,6 @@ namespace DataforgedGen.Pages
         public AssetPage()
         {
             LoadAsset();
-            enableCondition = asset.ConditionMeter.Max > 0;
         }
 
         private void LoadAsset()
@@ -39,6 +41,23 @@ namespace DataforgedGen.Pages
             using var streamRef = new DotNetStreamReference(stream);
 
             await JS!.InvokeVoidAsync("window.downloadFileFromStream", fileName, streamRef);
+        }
+
+        private async Task printCardButton()
+        {
+            await JS!.InvokeVoidAsync("downloadScreenShot", asset.Name, "#assetCard");
+        }
+
+        private async Task showImageInDialog()
+        {
+            var url = await JS!.InvokeAsync<string>("getScreenData", "#assetCard");
+
+            var dialogParameters = new DialogParameters
+            {
+                { "ImageUrl", url }
+            };
+
+            DialogService.Show<ImageDialogue>(asset.Name, dialogParameters);
         }
 
         private void ClearData()
