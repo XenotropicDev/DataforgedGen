@@ -97,11 +97,3 @@ a, .btn-link {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
-
-.striperows {
-    margin: 0 auto;
-}
-
-div.striperows > p:nth-of-type(odd) {
-    background: #e0e0e0;
-}
