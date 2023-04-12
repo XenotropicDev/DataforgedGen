@@ -1,6 +1,8 @@
 ﻿<MudDialog DefaultFocus="DefaultFocus.LastChild">
     <DialogContent>
-        <img src="@ImageUrl" />
+        <MudContainer Style="max-height: 500px; overflow-y: scroll">
+            <img src="@ImageUrl" />
+        </MudContainer>
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="Submit">Close</MudButton>

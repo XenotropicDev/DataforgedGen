@@ -1,4 +1,7 @@
-﻿namespace DataforgedGen
+﻿using System.Runtime.CompilerServices;
+using TheOracle2.Data;
+
+namespace DataforgedGen
 {
     public static class Extenstions
     {
@@ -23,6 +26,26 @@
             if (lineCount < minLines) return minLines; 
             
             return lineCount;
+        }
+
+        public static List<List<Table>> SplitIntoColumns(this ICollection<Table> source, int columns)
+        {
+            int amount = source.Count / columns;
+            if (source.Count % columns != 0) amount++;
+
+            var returnList = new List<List<Table>>();
+
+            for (int i = 0; i < columns; i++)
+            {
+                returnList.Add(source.Skip(i * amount).Take(amount).ToList());
+            }
+
+            return returnList;
+        }
+
+        public static string GetDisplayText(this Table t)
+        {
+            return t.Floor == t.Ceiling ? $"{t.Floor} {t.Result}" : $"{t.Floor}-{t.Ceiling} {t.Result}";
         }
     }
 }
