@@ -28,8 +28,10 @@
     </div>
     <script src="_framework/blazor.webassembly.js" autostart="false"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="js/AssetPage.js"></script>
+    <script src="js/html2canvas.min.js"></script>
 
-    <script>
+    <script type="text/javascript">
         window.downloadFileFromStream = async (fileName, contentStreamReference) => {
             const arrayBuffer = await contentStreamReference.arrayBuffer();
             const blob = new Blob([arrayBuffer]);
@@ -42,7 +44,6 @@
             URL.revokeObjectURL(url);
         }
     </script>
-
     <script src="decode.min.js"></script>
     <script src="brotliloader.min.js"></script>
 </body>
