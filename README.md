@@ -9,9 +9,9 @@ You can find a link to the site here: [DataforgedGen](https://xenotropicdev.gith
 If you have a lot of things you want to convert you might want to check out the main Dataforged repo. There are some tools in there that might be able to help you convert what you have into the proper formats in a more automatic way.
 
 ## Planned features:
-* Import JSON for editing
 * Author features
 * Oracle Bot/Discord integrations
 * ~~Asset page~~ _Done!_
 * ~~Move Reference page~~ _Done!_
 * ~~Pretty outputs for printing and digital displays~~ _Done!_
+* ~~Import JSON for editing~~ _Done!_

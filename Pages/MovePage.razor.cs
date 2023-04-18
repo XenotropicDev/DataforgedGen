@@ -1,5 +1,6 @@
 using DataswornPoco;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using MudBlazor;
@@ -15,6 +16,9 @@ public partial class MovePage
 
     [Inject]
     public IJSRuntime? JS { get; set; }
+
+    [Inject]
+    public ISnackbar Snackbar { get; set; }
 
     public MovePage()
     {
@@ -67,5 +71,22 @@ public partial class MovePage
         move.Outcomes.StrongHit.Id = move.Outcomes.Id + "/Strong_Hit";
         move.Outcomes.WeakHit.Id = move.Outcomes.Id + "/Weak_Hit";
         move.Outcomes.Miss.Id = move.Outcomes.Id + "/Miss";
+    }
+
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        using var text = file.OpenReadStream();
+        using var streamReader = new StreamReader(text);
+
+        var read = await streamReader.ReadToEndAsync();
+
+        try
+        {
+            move = JsonConvert.DeserializeObject<Move>(read, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error }) ?? new();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Couldn't process the json file:\n{ex.Message}");
+        }
     }
 }

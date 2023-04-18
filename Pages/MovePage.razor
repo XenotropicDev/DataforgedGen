@@ -12,6 +12,16 @@
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Download" @onclick="DownloadJson">Download Json File</MudButton>
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.RestartAlt" OnClick="LoadMove">Reset Template</MudButton>
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Clear" OnClick="ClearData">Clear</MudButton>
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Class="ma-0">
+                    <ButtonTemplate>
+                        <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   StartIcon="@Icons.Material.Outlined.UploadFile"
+                                   for="@context">
+                            Upload Json
+                        </MudButton>
+                    </ButtonTemplate>
+                </MudFileUpload>
             </MudStack>
 
             <MudGrid Class="pa-4">
