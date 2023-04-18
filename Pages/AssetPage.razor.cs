@@ -72,7 +72,7 @@ public partial class AssetPage
             Source = new(),
             Display = new(),
             Attachments = new(),
-            ConditionMeter = new(),
+            ConditionMeter = null,
             Inputs = new(),
             States = new(),
             Usage = new(),
@@ -132,7 +132,7 @@ public partial class AssetPage
 
         try
         {
-            asset = JsonConvert.DeserializeObject<Asset>(read) ?? new();
+            asset = JsonConvert.DeserializeObject<Asset>(read, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error }) ?? new();
         }
         catch (Exception ex) 
         {

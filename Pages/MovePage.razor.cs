@@ -82,7 +82,7 @@ public partial class MovePage
 
         try
         {
-            move = JsonConvert.DeserializeObject<Move>(read) ?? new();
+            move = JsonConvert.DeserializeObject<Move>(read, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error }) ?? new();
         }
         catch (Exception ex)
         {

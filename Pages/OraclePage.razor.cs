@@ -144,11 +144,13 @@ public partial class OraclePage
 
         try
         {
-            oracle = JsonConvert.DeserializeObject<Oracle>(read) ?? new();
+            oracle = JsonConvert.DeserializeObject<Oracle>(read, new JsonSerializerSettings {MissingMemberHandling = MissingMemberHandling.Error }) ?? new();
         }
         catch (Exception ex)
         {
             Snackbar.Add($"Couldn't process the json file:\n{ex.Message}");
         }
+
+        tableSplit = oracle.Table.SplitIntoColumns(columnCount);
     }
 }
