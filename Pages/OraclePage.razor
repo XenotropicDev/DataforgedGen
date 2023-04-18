@@ -14,6 +14,16 @@
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Download" @onclick="DownloadJson">Download Json File</MudButton>
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.RestartAlt" OnClick="LoadOracle1">Reset Template</MudButton>
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Clear" OnClick="ClearData">Clear</MudButton>
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Class="ma-0">
+                    <ButtonTemplate>
+                        <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   StartIcon="@Icons.Material.Outlined.UploadFile"
+                                   for="@context">
+                            Upload Json
+                        </MudButton>
+                    </ButtonTemplate>
+                </MudFileUpload>
             </MudStack>
 
             <MudGrid Class="pa-4">
@@ -103,22 +113,25 @@
             <MudCardContent>
                 <MudText Typo="@Typo.h4">@oracle.Name</MudText>
                 <div class="black py-1 mt-1 mb-1 rounded-sm"></div>
-                <MudSimpleTable Striped=true Dense=true Elevation="0">
-                    <tbody>
-                        @for (int row = 0; row < tableSplit.Max(t => t.Count); row++)
-                        {
-                            <tr>
-                            @for (int i = 0; i < columnCount; i++)
+                @if (tableSplit.Count > 0)
+                {
+                    <MudSimpleTable Striped=true Dense=true Elevation="0">
+                        <tbody>
+                            @for (int row = 0; row < tableSplit.Max(t => t.Count); row++)
                             {
-                                if (tableSplit[i].Count > row)
-                                {
-                                    <td>@tableSplit[i][row]?.GetDisplayText()</td>
-                                }
+                                <tr>
+                                    @for (int i = 0; i < columnCount; i++)
+                                    {
+                                        if (tableSplit[i].Count > row)
+                                        {
+                                            <td>@tableSplit[i][row]?.GetDisplayText()</td>
+                                        }
+                                    }
+                                </tr>
                             }
-                            </tr>
-                        }
-                    </tbody>
-                </MudSimpleTable>
+                        </tbody>
+                    </MudSimpleTable>
+                }
             </MudCardContent>
         </MudCard>
         <MudStack Class="mt-4" Style="@($"width: {cardWidth}px;")">

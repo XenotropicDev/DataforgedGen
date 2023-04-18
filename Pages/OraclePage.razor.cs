@@ -1,5 +1,6 @@
 ﻿using DataswornPoco;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using MudBlazor;
@@ -26,6 +27,9 @@ public partial class OraclePage
 
     [Inject]
     public IJSRuntime? JS { get; set; }
+
+    [Inject]
+    public ISnackbar Snackbar { get; set; }
 
     public OraclePage()
     {
@@ -77,6 +81,7 @@ public partial class OraclePage
         oracle.Usage.Suggestions = new();
 
         tableRowToAdd = new() { Ceiling = 1, Floor = 1 };
+        tableSplit = new();
     }
 
     private void AddTableRow()
@@ -128,5 +133,22 @@ public partial class OraclePage
             };
 
         DialogService.Show<ImageDialogue>(oracle.Name, dialogParameters);
+    }
+
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        using var text = file.OpenReadStream();
+        using var streamReader = new StreamReader(text);
+
+        var read = await streamReader.ReadToEndAsync();
+
+        try
+        {
+            oracle = JsonConvert.DeserializeObject<Oracle>(read) ?? new();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Couldn't process the json file:\n{ex.Message}");
+        }
     }
 }
